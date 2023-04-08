@@ -1,0 +1,39 @@
+/**
+ * Bu kısımda, Json object mantığı ile bağımlılıklara ait Ad ve Versiyon
+ * bilgileri export ediliyor.
+ */
+ext {
+    /**
+     * Burada bağımlılıklarımıza ait versiyonları tek bir çatıda toplayarak
+     * buradan yönetilmelerini sağlıyoruz.
+     */
+    versions = [
+            springBoot      : "2.7.10",
+            springCloud     : "3.1.6",
+            lombok          : "1.18.26",
+            postgresql      : "42.6.0",
+            swagger         : "1.6.15",
+            mapstruct       : "1.5.3.Final",
+    ]
+    /**
+     * Bağımlılıkların yazımı, mevcut kullanımı ek olarak şu şekilde yazılabilir.
+     * 1. Bağımlılığın grup adı yazılır.(grupId)
+     * 2. : eklenir.
+     * 3. Bağımlık adı. (artifactId)
+     * 4. : eklenir
+     * 5. bağımlılığın versiyonu yönetim olarak eklediğimiz listeden çekilir. Bu aşamada
+     * $versions.XXXX şeklinde yazılmalıdır.
+     */
+    libs = [
+            springBootWeb           : "org.springframework.boot:spring-boot-starter-web:${versions.springBoot}",
+            springBootDataJpa       : "org.springframework.boot:spring-boot-starter-data-jpa:${versions.springBoot}",
+            springBootValidation    : "org.springframework.boot:spring-boot-starter-validation:${versions.springBoot}",
+            lombok                  : "org.projectlombok:lombok:${versions.lombok}",
+            postgresql              : "org.postgresql:postgresql:${versions.postgresql}",
+            swagger                 : "org.springdoc:springdoc-openapi-ui:${versions.swagger}",
+            mapstruct               : "org.mapstruct:mapstruct:${versions.mapstruct}",
+            mapstructProcessor      : "org.mapstruct:mapstruct-processor:${versions.mapstruct}",
+            springCloudOpenFeign    : "org.springframework.cloud:spring-cloud-starter-openfeign:${versions.springCloud}"
+
+    ]
+}
