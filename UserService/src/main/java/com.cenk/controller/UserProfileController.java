@@ -5,6 +5,7 @@ import com.cenk.dto.request.*;
 import com.cenk.dto.response.*;
 import com.cenk.exception.ErrorType;
 import com.cenk.exception.UserException;
+import com.cenk.repository.entity.UserProfile;
 import com.cenk.service.UserProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -32,20 +33,14 @@ public class UserProfileController {
         }
         return ResponseEntity.ok(userService.findNameOrSurname(dto));
     }
-
     @PostMapping("/update")
-    public ResponseEntity<UserUpdateResponseDto> update(@RequestBody @Valid UserUpdateRequestDto dto){
-        Boolean status = userService.updateUser(dto);
-        if(status) {
-            return ResponseEntity.ok(UserUpdateResponseDto.builder()
-                    .statusCode(200)
-                    .message("Güncelleme işlemi başarılı bir şekilde gerçekleşti, Helal be sana")
-                    .build());
-        }
-        return ResponseEntity.ok(UserUpdateResponseDto.builder()
-                .statusCode(300)
-                .message("Güncelleme işlemi başarısız, Yuh be Çüş be")
-                .build());
+    public ResponseEntity<Void> update(@RequestBody @Valid UserUpdateRequestDto dto){
+        userService.update(dto);
+        return ResponseEntity.ok().build();
+    }
+    @GetMapping("/findall")
+    public ResponseEntity<List<UserProfile>> findAll(){
+        return ResponseEntity.ok(userService.findAll());
     }
 
 

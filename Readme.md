@@ -21,3 +21,29 @@
     1.6. Tüm modüllerimize monolitik mimaride kullandığımız default kodlamaları ekledik.
     1.7. Eğer bir modül içinde kullanmak istediğimiz özel bağımlılıkları var ise bunları
     build.gradle dosyalarını ekledik.
+
+## 2. Mongo DB Kurulum ve Kullanım
+### 2.1. Mongo DB Docker üzerinde çalıştırmak
+
+    docker kurulu olan bir sistem üzerinde command satırına girerek aşağıda
+    yer alan komutları yazarak docker üzerinden çalıştırınız.
+
+
+    > docker run --name dockermongo -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=BilgeAdmin -e MONGO_INITDB_ROOT_PASSWORD=root -d mongo
+    Admin: BilgeAdmin, Psw: root
+## 2.2. MongoDB ye bağlamak
+
+    DİKKAT!!!
+    mongodb kullanırken admin kullanıcısı ve şifrelerini veritabanlarına erişmek
+    için kullanmayınız.
+    Yeni bir veritabanı oluşturmak için admin kullanıcısı ile işlem yapılır ve 
+    bu veritabanına atanmak üzere yeni bir kullanıcı oluşturur. Böylelikle
+    admin kullanıcısının ihtiyaç kalmadan DB üzerinde işlemler gerçekleştirilir.
+    Admin kullanıcısı uygulamalar tarafından erişilmemelidir. Her uygulama için özelleştirilmiş
+    kullanıcılar kullanılmalıdır.
+
+    1- Öncelikle bir veritabanı oluşturuyorsunuz.
+    2- mongosh kullanarak konsolda 'use DB_ADI' yazıyorsunuz ve ilgili DB'ye geçiş yapıyorsunuz.
+    3- Yine aynı ekranda yeni bir kullanıcı oluşturmanız gereklidir. Bu kullanıcı yetkili olacaktır.
+    
+    > db.createUser({user: "Java7User",pwd: "root",roles: ["readWrite", "dbAdmin"]})

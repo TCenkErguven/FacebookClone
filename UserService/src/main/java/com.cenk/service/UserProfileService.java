@@ -10,18 +10,21 @@ import com.cenk.repository.IUserRepository;
 import com.cenk.repository.entity.UserProfile;
 import com.cenk.utility.ServiceManager;
 import org.springframework.stereotype.Service;
-
+import com.cenk.utility.TokenCreator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserProfileService extends ServiceManager<UserProfile,Long> {
+public class UserProfileService extends ServiceManager<UserProfile,String> {
     private final IUserRepository iUserRepository;
+    private final TokenCreator tokenCreator;
 
-    public UserProfileService(IUserRepository iUserRepository){
+    public UserProfileService(IUserRepository iUserRepository,
+                              TokenCreator tokenCreator){
         super(iUserRepository);
         this.iUserRepository = iUserRepository;
+        this.tokenCreator = tokenCreator;
     }
 
     public void save(UserSaveRequestDto dto){
@@ -39,16 +42,21 @@ public class UserProfileService extends ServiceManager<UserProfile,Long> {
         });
         return foundUserlist;
     }
-    public Boolean updateUser(UserUpdateRequestDto dto){
-        Boolean status = false;
-        Optional<UserProfile> userOptional = iUserRepository.findById(dto.getId());
-        if(userOptional.isPresent()){
-             userOptional.get().setAddress(dto.getAddress());
-             userOptional.get().setPhone(dto.getPhone());
-             userOptional.get().setAvatar(dto.getAvatar());
-             iUserRepository.save(userOptional.get());
-             status = true;
+    public void update(UserUpdateRequestDto dto){
+        Optional<Long> authid = tokenCreator.getAuthId(dto.getToken());
+        if(authid.isEmpty())
+            throw new UserException(ErrorType.ERROR_INVALID_TOKEN);
+        Optional<UserProfile> userProfile = iUserRepository.findOptionalByAuthid(authid.get());
+        if(userProfile.isPresent()){
+            UserProfile profile = userProfile.get();
+            profile.setAddress(dto.getAddress());
+            profile.setAvatar(dto.getAvatar());
+            profile.setGender(dto.getGender());
+            profile.setName(dto.getName());
+            profile.setPhone(dto.getPhone());
+            profile.setSurname(dto.getSurname());
+            update(profile);
         }
-        return status;
     }
+
 }
