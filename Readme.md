@@ -47,3 +47,26 @@
     3- Yine aynı ekranda yeni bir kullanıcı oluşturmanız gereklidir. Bu kullanıcı yetkili olacaktır.
     
     > db.createUser({user: "Java7User",pwd: "root",roles: ["readWrite", "dbAdmin"]})
+
+## 3. RabbitMQ Kurulum ve Kullanım
+### RabbitMQ Docker üzerinde çalıştırmak
+
+    docker run -d --name my-rabbitmq -e RABBITMQ_DEFAULT_USER=java7 -e RABBITMQ_DEFAULT_PASS=root -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+    gradle import -> org.springframework.boot:spring-boot-starter-amqp:VERSION
+    Rabbit Config yapılandırılır ve kuyruk yapısı tanımlanır.
+
+## 4. Zipkin Server kurmak ve Kullanmak
+
+    docker run --name zipkinfb -d -p 9411:9411 openzipkin/zipkin
+
+    Zipkin için gerekli bağımlılıklar:
+    springCloudSleuth       : "org.springframework.cloud:spring-cloud-starter-sleuth:${versions.springCloud}",
+    springCloudZipkin       : "org.springframework.cloud:spring-cloud-sleuth-zipkin:${versions.springCloud}",
+
+    Configuration
+
+    zipkin:
+    enabled: true
+    base-url: http://localhost:9411
+    service:
+    name: config-server

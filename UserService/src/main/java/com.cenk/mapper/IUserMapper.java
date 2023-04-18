@@ -2,6 +2,7 @@ package com.cenk.mapper;
 
 import com.cenk.dto.request.UserSaveRequestDto;
 import com.cenk.dto.response.FindResponseDto;
+import com.cenk.rabbitmq.model.CreateUserModel;
 import com.cenk.repository.entity.UserProfile;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
@@ -12,4 +13,5 @@ public interface IUserMapper {
     IUserMapper INSTANCE = Mappers.getMapper(IUserMapper.class);
     FindResponseDto toFindResponseDto(final UserProfile user);
     UserProfile toUser(final UserSaveRequestDto dto);
+    UserProfile toUserProfile(final CreateUserModel model);
 }

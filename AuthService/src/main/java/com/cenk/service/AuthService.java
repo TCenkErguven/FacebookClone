@@ -7,6 +7,8 @@ import com.cenk.exception.AuthException;
 import com.cenk.exception.ErrorType;
 import com.cenk.manager.IUserProfileManager;
 import com.cenk.mapper.IAuthMapper;
+import com.cenk.rabbitmq.model.CreateUserModel;
+import com.cenk.rabbitmq.producer.CreateUserProducer;
 import com.cenk.repository.IAuthRepository;
 import com.cenk.repository.entity.Auth;
 import com.cenk.utility.ServiceManager;
@@ -18,12 +20,15 @@ import java.util.Optional;
 public class AuthService extends ServiceManager<Auth,Long> {
     private final IAuthRepository repository;
     private final IUserProfileManager userProfileManager;
+    private final CreateUserProducer createUserProducer;
 
     public AuthService(IAuthRepository repository,
-                       IUserProfileManager userProfileManager){
+                       IUserProfileManager userProfileManager,
+                       CreateUserProducer createUserProducer){
         super(repository);
         this.repository = repository;
         this.userProfileManager = userProfileManager;
+        this.createUserProducer = createUserProducer;
     }
 
     public Optional<Auth> doLogin(LoginRequestDto dto){
@@ -58,7 +63,14 @@ public class AuthService extends ServiceManager<Auth,Long> {
          * verdiğimiz parametreleri iletişim geçeceğimiz UserProfile servisinin save methoduna
          * jsonObject olarak gönderir ve böylece o save methodunun çalışmasını sağlar.
          */
-        userProfileManager.save(requestDto);
+        //OpenFeign
+        //userProfileManager.save(requestDto);
+        createUserProducer.convertAndSendData(CreateUserModel.builder()
+                        .authid(auth.getId())
+                        .email(auth.getEmail())
+                        .username(auth.getUsername())
+                .build());
+
     }
 
 }

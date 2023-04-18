@@ -3,8 +3,9 @@ buildscript {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${versions.springBoot}")
     }
 }
+
 dependencies {
-    implementation libs.springBootDataJpa
+    implementation libs.springCloudStarterConfig
+    implementation libs.springCloudConfigServer
     implementation libs.springCloudConfigClient
-    implementation libs.springBootAmqp
 }

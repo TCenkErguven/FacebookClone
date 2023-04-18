@@ -4,7 +4,6 @@ buildscript {
     }
 }
 dependencies {
-    implementation libs.springBootDataJpa
-    implementation libs.springCloudConfigClient
-    implementation libs.springBootAmqp
+    implementation libs.springCloudGateway
+    implementation libs.nettyResolver
 }
