@@ -1,6 +1,6 @@
 package com.cenk.dto.request;
 
-import com.cenk.repository.EGender;
+import com.cenk.repository.entity.EGender;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

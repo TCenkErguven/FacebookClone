@@ -8,4 +8,5 @@ include 'ConfigServer'
 include 'ConfigServer'
 include 'ConfigServerGit'
 include 'ApiGatewayService'
+include 'ElasticService'
 

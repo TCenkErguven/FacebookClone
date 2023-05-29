@@ -2,6 +2,10 @@ server:
   port: 9093
 
 spring:
+  security:
+    user:
+      name: cenk
+      password: root
   zipkin:
     enabled: true
     base-url: http://localhost:9411
@@ -21,6 +25,7 @@ spring:
       password: root
 
 my-application:
+  redishost: localhost
   jwt:
     secret-key: "X$so*wASwU*!@+ruyOnL9!lchex&fu?@?6e=rO$r$t5-ecrlzuJEml*rAqls4AB6"
     secret-key-env: ${SECRETKEY}

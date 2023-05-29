@@ -9,6 +9,7 @@ import com.cenk.repository.entity.UserProfile;
 import com.cenk.service.UserProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -44,9 +45,32 @@ public class UserProfileController {
         return ResponseEntity.ok().build();
     }
     @GetMapping("/findall")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN') or hasAnyAuthority(NE_OLA_KI)")
     public ResponseEntity<List<UserProfile>> findAll(){
         return ResponseEntity.ok(userService.findAll());
     }
 
+    @GetMapping("/getnametoupper")
+    public ResponseEntity<String> getNameToUpper(String name){
+        return ResponseEntity.ok(userService.getNameToUpper(name));
+    }
+
+    @GetMapping("/clearcache")
+    public ResponseEntity<Void> clearCache(){
+        userService.clearCacheToUpper();
+        return ResponseEntity.ok().build();
+    }
+
+    @CrossOrigin("*")
+    @PostMapping("/getmyprofile")
+    public ResponseEntity<GetMyProfileResponseDto> getMyProfile(@RequestBody @Valid GetMyProfileRequestDto dto){
+        return ResponseEntity.ok(userService.getMyProfile(dto));
+    }
+
+    @CrossOrigin("*")
+    @PostMapping("/getotherprofile")
+    public ResponseEntity<UserProfile> getOtherProfile(@RequestBody @Valid GetMyProfileRequestDto dto){
+        return ResponseEntity.ok(userService.getOtherProfile(dto));
+    }
 
 }

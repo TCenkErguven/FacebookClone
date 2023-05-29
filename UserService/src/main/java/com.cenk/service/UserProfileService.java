@@ -3,6 +3,7 @@ package com.cenk.service;
 import com.cenk.dto.request.UserFindRequestDto;
 import com.cenk.dto.request.*;
 import com.cenk.dto.response.FindResponseDto;
+import com.cenk.dto.response.GetMyProfileResponseDto;
 import com.cenk.exception.ErrorType;
 import com.cenk.exception.UserException;
 import com.cenk.mapper.IUserMapper;
@@ -11,6 +12,8 @@ import com.cenk.repository.IUserRepository;
 import com.cenk.repository.entity.UserProfile;
 import com.cenk.utility.JwtTokenManager;
 import com.cenk.utility.ServiceManager;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +30,7 @@ public class UserProfileService extends ServiceManager<UserProfile,String> {
         this.iUserRepository = iUserRepository;
         this.jwtTokenManager = jwtTokenManager;
     }
+
 
     public void save(UserSaveRequestDto dto){
         save(IUserMapper.INSTANCE.toUser(dto));
@@ -63,5 +67,47 @@ public class UserProfileService extends ServiceManager<UserProfile,String> {
             update(profile);
         }
     }
+    @Cacheable(value = "getnametoupper")
+    public String getNameToUpper(String name){
+        try{
+            Thread.sleep(3000);
+        }catch (Exception ex){
 
+        }
+        return name.toUpperCase();
+    }
+
+    @CacheEvict(value = "getnametoupper",allEntries = true)
+    public void clearCacheToUpper(){
+        System.out.println("Tüm cache'i temizledim");
+    }
+
+    public GetMyProfileResponseDto getMyProfile(GetMyProfileRequestDto dto) {
+        Optional<Long> authid = jwtTokenManager.getIdFromToken(dto.getToken());
+        if(authid.isEmpty())
+            throw new UserException(ErrorType.ERROR_INVALID_TOKEN);
+        Optional<UserProfile> userProfile = iUserRepository.findOptionalByAuthid(authid.get());
+        if(userProfile.isEmpty()){
+            throw new UserException(ErrorType.USER_NOT_FOUND);
+        }
+        return GetMyProfileResponseDto.builder()
+                .about(userProfile.get().getPhone())
+                .avatar(userProfile.get().getAvatar())
+                .name(userProfile.get().getName() + " " + userProfile.get().getSurname())
+                .username(userProfile.get().getUsername())
+                .build();
+    }
+
+    public UserProfile getOtherProfile(GetMyProfileRequestDto dto) {
+        Optional<UserProfile> userProfile = iUserRepository.findById(dto.getUserid());
+        System.out.println("Burdayım 1 " + dto);
+        if(userProfile.isEmpty())
+            throw new UserException(ErrorType.ERROR_NOT_FOUND_USERNAME);
+        System.out.println("Burdayım 2");
+        return userProfile.get();
+    }
+
+    public Optional<UserProfile> findByAuthId(long authid){
+        return iUserRepository.findOptionalByAuthid(authid);
+    }
 }

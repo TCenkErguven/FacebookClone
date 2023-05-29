@@ -70,3 +70,54 @@
     base-url: http://localhost:9411
     service:
     name: config-server
+
+## 5. Redis Kurulum ve Kullanım
+
+    docker run --name localredis -d -p 6379:6379 redis
+
+    Redis için gerekli bağımlılıklar:
+    springBootDataRedis     : "org.springframework.boot:spring-boot-starter-data-redis:${versions.springBoot}",
+
+    Redis için bağlantı kodlamalarını yapmamız gerekli
+
+    @Bean
+    public LettuceConnectionFactory redisConnectionFactory(){
+        return new LettuceConnectionFactory(
+                new RedisStandaloneConfiguration("localhost",6379));
+    }
+
+## 6. ElasticSearch Kurulum ve Kullanım
+
+    DİKKAT!!!
+    Spring ile kullanımında sürüm önemlidir. Hangi Spring boot sürümünü kullandıysanız
+    ona uygun bir ElasticSearch sürümü kullanmalısınız.
+
+    1- docker network create somenetwork
+    2- docker run -d --name elasticsearch --net somenetwork -p 9200:9200 -p 9300:9300 -e ES_JAVA_OPTS="-Xms512m -Xmx2048m" -e "discovery.type=single-node" elasticsearch:7.17.9
+
+    ElasticSearch için gerekli bağımlılıklar
+
+## 7. Projenin Docker image olarak oluşturulması
+
+    Herhangi bir projenin paket haline getirilmesi için öncelikle
+    1- Gradle -> [Projenin Adı ] -> Tasks -> build -> build
+    2- Gradle -> [Projenin Adı ] -> Tasks -> build -> buildDependents
+    bu iki adımdan sonra projenin altında build klasörü oluşur bu klasöt
+    içerisinde jar dosyası oluşur. build->libs-> [Projenin Adı].jar
+
+### 7.1 Dockerfile 
+
+    DİKKAT!!!!
+    Docker image oluştururken docker.hub üzerindeki repoya gönderilmek istenilen
+    image lar için isimlendirmeyi doğru yapmanız gereklidir.
+    hub.docker repo adınız / image adınız : versiyon numarası
+    şeklinde yazmanız gereklidir.
+    DİKKAT!!!!
+    ifade sonunda olan nokta (.) unutulmamalıdır. rastgele bir nokta değildir.
+    
+    docker build -t javaboost2/java7-configservergit:v.1.0 . 
+    docker build -t cenk92/java-authservice:v.1.1 .
+    docker build -t cenk92/java-userservice:v.1.0 .
+    docker build -t cenk92/java-gatewayservice:v.1.0 .
+
+#http://10.36.15.92:8888

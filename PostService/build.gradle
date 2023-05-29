@@ -4,5 +4,7 @@ buildscript {
     }
 }
 dependencies {
-    implementation libs.springBootDataJpa
+    implementation libs.springBootDataMongoDB
+    implementation libs.springCloudConfigClient
+    implementation libs.springBootAmqp
 }
