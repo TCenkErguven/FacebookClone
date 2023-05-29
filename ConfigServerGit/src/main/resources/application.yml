@@ -8,8 +8,8 @@ spring:
     config:
       server:
         git:
-          uri: "https://github.com/TCenkErguven/java7configyml.git"
+          uri: ${GIT_JAVA7_URL}
           default-label: main
           skip-ssl-validation: true
-          username: TCenkErguven
+          username: ${GIT_JAVA7_USERNAME}
           password: ${GIT_JAVA7_PASSWORD}
